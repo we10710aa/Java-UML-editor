@@ -15,7 +15,7 @@ public class UmlComponent {
     }
 
     public boolean contains(int x, int y){
-        return false;
+        return (x > minX)&&(y>minY)&&(x<minX+width)&&(y<minY+height);
     }
 
     public BasicRect getBound(){
@@ -23,7 +23,10 @@ public class UmlComponent {
     }
 
     public boolean withIn(BasicRect rect){
-        return false;
+        return (minX>rect.minX)&&
+                (minX+width<(rect.minX+rect.width))&&
+                (minY>rect.minY)&&
+                (minY+height<(rect.minY+rect.height));
     }
 
     public void draw(Graphics2D graphics2D){
@@ -36,9 +39,10 @@ public class UmlComponent {
     }
 
     public void onSelected(){
+        selected = true;
     }
 
     public  void onUnSelected(){
-
+        selected = false;
     }
 }

@@ -15,5 +15,17 @@ public class UmlClass extends UmlComponent {
     @Override
     public void draw(Graphics2D graphics2D) {
         graphics2D.drawRect(minX,minY,width,height);
+        if(selected){
+            graphics2D.fillRect(minX-5,(minY+height/2-5),10,10);
+            graphics2D.fillRect((minX+width)-5,(minY+height/2-5),10,10);
+            graphics2D.fillRect((minX+width/2-5),minY-5,10,10);
+            graphics2D.fillRect((minX+width/2-5),((minY+height)-5),10,10);
+
+        }
+    }
+
+    @Override
+    public void onSelected() {
+        this.selected=true;
     }
 }
