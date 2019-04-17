@@ -70,37 +70,49 @@ public class UmlEditorCanvas extends Canvas {
     }
     class SelectModeListener implements MouseListener{
         Point pressedPoint;
-
+        boolean touchOnComponent = false;
+        UmlComponent tempComponent;
         @Override
         public void mouseClicked(MouseEvent e) {
-            for(UmlComponent component:editorObjects){
-                component.onUnSelected();
-                if(component.contains(e.getX(),e.getY())){
-                    component.onSelected();
-                }
+            System.out.println("OnMouseClicked");
+            if(touchOnComponent){
+                tempComponent.onSelected();
+                touchOnComponent = false;
             }
             repaint();
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            System.out.println(e.getX()+" and "+e.getY());
+            System.out.println("OnMousePressed");
             pressedPoint = e.getPoint();
+            for(UmlComponent component : editorObjects){
+                component.onUnSelected();
+                if(component.contains(pressedPoint)){
+                    touchOnComponent = true;
+                    tempComponent = component;
+                }
+            }
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {
-            System.out.println(e.getX()+" and "+e.getY());
-            int width = e.getX() - pressedPoint.x;
-            int height = e.getY() - pressedPoint.y;
-            for(UmlComponent component:editorObjects){
-                component.onUnSelected();
-                if(component.withIn(new BasicRect(pressedPoint.x,pressedPoint.y,width,height))){
-                    System.out.println("hi");
-                    component.onSelected();
+        public void mouseReleased(MouseEvent e) { //choose multiple stuff
+            System.out.println("OnMouseReleased");
+            if(e.getPoint() != pressedPoint){
+                if(touchOnComponent){
+                    tempComponent.moveTo(e.getPoint());
                 }
+                else{
+                    BasicRect  boundRect = new BasicRect(pressedPoint,e.getPoint());
+                    for(UmlComponent component:editorObjects){
+                        component.onUnSelected();
+                        if(component.withIn(boundRect)){
+                            component.onSelected();
+                        }
+                    }
+                }
+                repaint();
             }
-            repaint();
         }
 
         @Override

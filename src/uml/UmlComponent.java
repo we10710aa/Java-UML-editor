@@ -11,10 +11,12 @@ public class UmlComponent {
     int width;
     int height;
     boolean selected;
-    UmlComponent(){
+    public UmlComponent(){
     }
 
-    public boolean contains(int x, int y){
+    public boolean contains(Point p){
+        int x = p.x;
+        int y = p.y;
         return (x > minX)&&(y>minY)&&(x<minX+width)&&(y<minY+height);
     }
 
@@ -29,13 +31,11 @@ public class UmlComponent {
                 (minY+height<(rect.minY+rect.height));
     }
 
-    public void draw(Graphics2D graphics2D){
+    public void draw(Graphics2D graphics2D){ }
 
-    }
-
-    public void moveTo(int x, int y){
-        this.minX = x;
-        this.minY = y;
+    public void moveTo(Point p){
+        this.minX = p.x;
+        this.minY = p.y;
     }
 
     public void onSelected(){
