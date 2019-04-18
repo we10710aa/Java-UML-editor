@@ -37,4 +37,5 @@ public class UmlComponent extends BasicComponent{
         connectionPortList.add(LEFT_PORT,new BasicRect((minX+width/2-5),minY-5,10,10,BasicRect.SOLID));
         connectionPortList.add(RIGHT_PORT,new BasicRect((minX+width/2-5),((minY+height)-5),10,10,BasicRect.SOLID));
     }
+
 }

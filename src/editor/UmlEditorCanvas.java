@@ -3,6 +3,7 @@ package editor;
 import uml.UmlClass;
 import uml.UmlComponent;
 import uml.BasicRect;
+import uml.UmlUseCase;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -16,6 +17,10 @@ public class UmlEditorCanvas extends Canvas {
     public static int MODE_SELECT = 1;
     private LinkedList<UmlComponent> editorObjects;
     public UmlEditorCanvas(){
+        editorObjects = new LinkedList<>();
+        editorObjects.add(new UmlClass(50,50));
+        editorObjects.add(new UmlClass(50,250));
+        editorObjects.add(new UmlUseCase(300,50));
         Frame f= new Frame("Canvas Editor");
         f.setLayout(null);
         f.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -24,9 +29,6 @@ public class UmlEditorCanvas extends Canvas {
         f.add(this);
         f.setVisible(true);
         this.addMouseListener(new SelectModeListener());
-        editorObjects = new LinkedList<>();
-        editorObjects.add(new UmlClass(50,50));
-        editorObjects.add(new UmlClass(50,250));
     }
 
     @Override

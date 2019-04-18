@@ -8,6 +8,12 @@ public class BasicComponent implements Drawable {
     public int width;
     public int height;
     public BasicComponent(){}
+    public BasicComponent(int x,int y,int width, int height){
+        this.minX = x;
+        this.minY=y;
+        this.width= width;
+        this.height = height;
+    }
 
     @Override
     public void draw(Graphics2D graphics2D) {

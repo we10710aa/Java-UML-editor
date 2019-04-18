@@ -11,11 +11,8 @@ public class BasicRect extends BasicComponent {
     public static int SOLID=1;
     private int fillType=0;
 
-    public BasicRect(int x,int y,int width, int height){
-        this.minX = x;
-        this.minY=y;
-        this.width= width;
-        this.height = height;
+    public BasicRect(int x,int y,int width,int height){
+        super(x,y,width,height);
     }
     public BasicRect(Point p1,Point p2){
         this.minX = min(p1.x,p2.x);
@@ -29,7 +26,7 @@ public class BasicRect extends BasicComponent {
     }
 
     public BasicRect(int x,int y,int width, int height, int fillType){
-        this(x,y,width,height);
+        super(x,y,width,height);
         this.fillType= fillType;
 
     }
