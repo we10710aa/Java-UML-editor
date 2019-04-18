@@ -1,42 +1,17 @@
 package uml;
 
-import uml.shape.BasicRect;
-
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UmlComponent {
-
-    int minX;
-    int minY;
-    int width;
-    int height;
+public class UmlComponent extends BasicComponent{
     boolean selected;
-    public UmlComponent(){
-    }
+    private List<BasicRect> connectionPortList;
+    public static int UPPER_PORT = 0;
+    public static int LOWER_PORT = 1;
+    public static int LEFT_PORT = 2;
+    public static int RIGHT_PORT = 3;
 
-    public boolean contains(Point p){
-        int x = p.x;
-        int y = p.y;
-        return (x > minX)&&(y>minY)&&(x<minX+width)&&(y<minY+height);
-    }
-
-    public BasicRect getBound(){
-        return new BasicRect(minX,minY,width,height);
-    }
-
-    public boolean withIn(BasicRect rect){
-        return (minX>rect.minX)&&
-                (minX+width<(rect.minX+rect.width))&&
-                (minY>rect.minY)&&
-                (minY+height<(rect.minY+rect.height));
-    }
-
-    public void draw(Graphics2D graphics2D){ }
-
-    public void moveTo(Point p){
-        this.minX = p.x;
-        this.minY = p.y;
-    }
 
     public void onSelected(){
         selected = true;
@@ -44,5 +19,22 @@ public class UmlComponent {
 
     public  void onUnSelected(){
         selected = false;
+    }
+
+    void drawConnectionPort(Graphics2D graphics2D){
+        for(BasicRect port:connectionPortList){
+            port.draw(graphics2D);
+        }
+    }
+
+    void setConnectionPort(){
+        if(connectionPortList==null) {
+            connectionPortList = new ArrayList<>();
+        }
+        connectionPortList.clear();
+        connectionPortList.add(UPPER_PORT,new BasicRect(minX-5,(minY+height/2-5),10,10,BasicRect.SOLID));
+        connectionPortList.add(LOWER_PORT,new BasicRect((minX+width)-5,(minY+height/2-5),10,10,BasicRect.SOLID));
+        connectionPortList.add(LEFT_PORT,new BasicRect((minX+width/2-5),minY-5,10,10,BasicRect.SOLID));
+        connectionPortList.add(RIGHT_PORT,new BasicRect((minX+width/2-5),((minY+height)-5),10,10,BasicRect.SOLID));
     }
 }

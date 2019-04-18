@@ -1,4 +1,4 @@
-package uml.shape;
+package uml;
 
 public class BasicTriangle {
 }

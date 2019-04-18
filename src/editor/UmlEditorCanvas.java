@@ -2,10 +2,8 @@ package editor;
 
 import uml.UmlClass;
 import uml.UmlComponent;
-import uml.UmlContainer;
-import uml.shape.BasicRect;
+import uml.BasicRect;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -76,13 +74,13 @@ public class UmlEditorCanvas extends Canvas {
         public void mouseClicked(MouseEvent e) {
             System.out.println("OnMouseClicked");
             if(touchOnComponent){
-                tempComponent.onSelected();
-                touchOnComponent = false;
-            }
-            repaint();
+            tempComponent.onSelected();
+            touchOnComponent = false;
         }
+        repaint();
+    }
 
-        @Override
+    @Override
         public void mousePressed(MouseEvent e) {
             System.out.println("OnMousePressed");
             pressedPoint = e.getPoint();
@@ -98,9 +96,12 @@ public class UmlEditorCanvas extends Canvas {
         @Override
         public void mouseReleased(MouseEvent e) { //choose multiple stuff
             System.out.println("OnMouseReleased");
-            if(e.getPoint() != pressedPoint){
+            if(!e.getPoint().equals(pressedPoint)){
                 if(touchOnComponent){
-                    tempComponent.moveTo(e.getPoint());
+                    BasicRect rect = tempComponent.getBound();
+                    tempComponent.moveTo(new Point(e.getX()-(pressedPoint.x-rect.minX),
+                            e.getY()-(pressedPoint.y-rect.minY)));
+                    touchOnComponent =false;
                 }
                 else{
                     BasicRect  boundRect = new BasicRect(pressedPoint,e.getPoint());
