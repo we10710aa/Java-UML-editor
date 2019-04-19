@@ -25,6 +25,10 @@ public class BasicComponent implements Drawable {
         return new BasicRect(minX,minY,width,height);
     }
 
+    public Point getCenter(){
+        return new Point(minX+width/2,minY+height/2);
+    }
+
     public boolean contains(Point p){
         int x = p.x;
         int y = p.y;

@@ -26,6 +26,14 @@ public class UmlUseCase extends UmlComponent{
         }
     }
 
+    @Override
+    public void moveTo(Point p) {
+        super.moveTo(p);
+        useCaseOval.moveTo(p);
+        useCaseName.moveTo(p);
+        setConnectionPort();
+    }
+
     public String getUseCaseName() {
         return this.useCaseName.getText();
     }
@@ -33,4 +41,6 @@ public class UmlUseCase extends UmlComponent{
     public void setUseCaseName(String useCaseName) {
         this.useCaseName.setText(useCaseName);
     }
+
+
 }

@@ -49,6 +49,7 @@ public class UmlClass extends UmlComponent {
         super.moveTo(p);
         classNameShape.moveTo(p);
         classAttributeShape.moveTo(new Point(p.x,p.y+30));
+        className.moveTo(p);
         setConnectionPort();
     }
     public String getClassName() {

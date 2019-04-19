@@ -1,9 +1,6 @@
 package editor;
 
-import uml.UmlClass;
-import uml.UmlComponent;
-import uml.BasicRect;
-import uml.UmlUseCase;
+import uml.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -18,9 +15,11 @@ public class UmlEditorCanvas extends Canvas {
     private LinkedList<UmlComponent> editorObjects;
     public UmlEditorCanvas(){
         editorObjects = new LinkedList<>();
-        editorObjects.add(new UmlClass(50,50));
-        editorObjects.add(new UmlClass(50,250));
-        editorObjects.add(new UmlUseCase(300,50));
+        editorObjects.addLast(new UmlClass(50,50));
+        editorObjects.addLast(new UmlClass(50,250));
+        editorObjects.addLast(new UmlUseCase(300,50));
+
+        editorObjects.add(new UmlConnectionLine(editorObjects.get(1),editorObjects.get(2)));
         Frame f= new Frame("Canvas Editor");
         f.setLayout(null);
         f.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -37,6 +36,7 @@ public class UmlEditorCanvas extends Canvas {
         for(UmlComponent component :editorObjects){
             component.draw(g2);
         }
+        g2.drawPolygon(new int[]{250,300,300,250},new int[]{250,200,300,250},3);
     }
 
 
