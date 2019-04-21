@@ -5,22 +5,23 @@ import java.awt.*;
 public class UmlUseCase extends UmlComponent{
     private static final int DEFAULT_WIDTH=100;
     private static final int DEFAULT_HEIGHT=60;
-    BasicText useCaseName;
+    BasicText useCaseNameBasicText;
     BasicOval useCaseOval;
     public UmlUseCase(int x,int y){
         this.minX =x;
         this.minY = y;
         this.width = DEFAULT_WIDTH;
         this.height = DEFAULT_HEIGHT;
-        this.useCaseName = new BasicText(this.getBound(),"Default case",BasicText.LAYOUT_CENTER);
+        this.useCaseNameBasicText = new BasicText(this.getBound(),"Default",BasicText.LAYOUT_CENTER);
         useCaseOval = new BasicOval(minX,minY,width,height);
         setConnectionPort();
+        setComponentName("Default");
     }
 
     @Override
     public void draw(Graphics2D graphics2D) {
         useCaseOval.draw(graphics2D);
-        useCaseName.draw(graphics2D);
+        useCaseNameBasicText.draw(graphics2D);
         if(selected){
             drawConnectionPort(graphics2D);
         }
@@ -30,17 +31,21 @@ public class UmlUseCase extends UmlComponent{
     public void moveTo(Point p) {
         super.moveTo(p);
         useCaseOval.moveTo(p);
-        useCaseName.moveTo(p);
+        useCaseNameBasicText.moveTo(p);
         setConnectionPort();
     }
 
-    public String getUseCaseName() {
-        return this.useCaseName.getText();
+    public String getUseCaseNameBasicText() {
+        return this.useCaseNameBasicText.getText();
     }
 
-    public void setUseCaseName(String useCaseName) {
-        this.useCaseName.setText(useCaseName);
+    public void setUseCaseNameBasicText(String useCaseNameBasicText) {
+        this.useCaseNameBasicText.setText(useCaseNameBasicText);
     }
 
-
+    @Override
+    public void setComponentName(String componentName) {
+        super.setComponentName(componentName);
+        setUseCaseNameBasicText(componentName);
+    }
 }

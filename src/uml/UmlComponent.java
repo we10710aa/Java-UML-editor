@@ -12,13 +12,19 @@ public class UmlComponent extends BasicComponent{
     public static final int LEFT_PORT = 2;
     public static final int RIGHT_PORT = 3;
 
+    private String componentName = "";
+
 
     public void onSelected(){
         selected = true;
     }
 
-    public  void onUnSelected(){
+    public void onUnSelected(){
         selected = false;
+    }
+
+    public boolean isSelected(){
+        return selected;
     }
 
     void drawConnectionPort(Graphics2D graphics2D){
@@ -55,4 +61,15 @@ public class UmlComponent extends BasicComponent{
         return (this.minY+this.height < component.minY);
     }
 
+    public UmlComponent getUmlComponent(Point p) {
+        return this;
+    }
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    public String getComponentName() {
+        return this.componentName;
+    }
 }

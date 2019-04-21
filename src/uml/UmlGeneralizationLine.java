@@ -2,10 +2,12 @@ package uml;
 
 import java.awt.*;
 
-public class UmlCompositionLine extends UmlConnectionLine {
-    private BasicDiamond diamond;
+public class UmlGeneralizationLine extends UmlConnectionLine {
+    public static final int TRIANGLE_HEIGHT = 10;
+    public static final int TRIANGLE_WIDTH = 5;
+    private BasicTriangle trinagle;
 
-    public UmlCompositionLine(UmlComponent source,UmlComponent target){
+    public UmlGeneralizationLine(UmlComponent source, UmlComponent target){
         super(source,target);
     }
 
@@ -15,31 +17,29 @@ public class UmlCompositionLine extends UmlConnectionLine {
         if (source.isRightTo(target)){
             p1 = source.getConnectionPort(LEFT_PORT).getCenter();
             p2 = target.getConnectionPort(RIGHT_PORT).getCenter();
-            this.diamond = new BasicDiamond(p2.x,p2.y,10,BasicDiamond.LEFT);
-            p2.x+=10;
+            this.trinagle = new BasicTriangle(p2.x,p2.y, TRIANGLE_WIDTH, TRIANGLE_HEIGHT,BasicTriangle.LEFT);
+            p2.x += TRIANGLE_HEIGHT;
         }
         else if(source.isLeftTo(target)){
             p1 = source.getConnectionPort(RIGHT_PORT).getCenter();
             p2 = target.getConnectionPort(LEFT_PORT).getCenter();
-            this.diamond = new BasicDiamond(p2.x,p2.y,10,BasicDiamond.RIGHT);
-            p2.x-=10;
+            this.trinagle = new BasicTriangle(p2.x,p2.y, TRIANGLE_WIDTH, TRIANGLE_HEIGHT,BasicTriangle.RIGHT);
+            p2.x -= TRIANGLE_HEIGHT;
         }
         else if(source.isOnTopOf(target)){
             p1 = source.getConnectionPort(LOWER_PORT).getCenter();
             p2= target.getConnectionPort(UPPER_PORT).getCenter();
-            this.diamond = new BasicDiamond(p2.x,p2.y,10,BasicDiamond.DOWN);
-            p2.y-=10;
-
+            this.trinagle = new BasicTriangle(p2.x,p2.y, TRIANGLE_WIDTH, TRIANGLE_HEIGHT,BasicTriangle.DOWN);
+            p2.y-= TRIANGLE_HEIGHT;
         }
         else {
             p1 = source.getConnectionPort(UPPER_PORT).getCenter();
             p2 = target.getConnectionPort(LOWER_PORT).getCenter();
-            this.diamond = new BasicDiamond(p2.x,p2.y,10,BasicDiamond.UP);
-            p2.y+=10;
-
+            this.trinagle = new BasicTriangle(p2.x,p2.y, TRIANGLE_WIDTH, TRIANGLE_HEIGHT,BasicTriangle.UP);
+            p2.y+= TRIANGLE_HEIGHT;
         }
         line.moveTo(p1,p2);
         line.draw(graphics2D);
-        diamond.draw(graphics2D);
+        trinagle.draw(graphics2D);
     }
 }

@@ -1,33 +1,40 @@
 package editor;
 
+import editor.listener.*;
 import uml.*;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.LinkedList;
 
 
-public class UmlEditorCanvas extends Canvas {
-    private static final int WINDOW_WIDTH = 1000;
-    private static final int WINDOW_HEIGHT =1000;
-    public static int MODE_SELECT = 1;
+public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener {
+    public static final int MODE_SELECT = 1;
+    public static final int MODE_ASSOCIATION_LINE=2;
+    public static final int MODE_GENERALIZATION_LINE = 3;
+    public static final int MODE_COMPOSITION_LINE = 4;
+    public static final int MODE_CREATE_CLASS = 5;
+    public static final int MODE_CREATE_USE_CASE = 6;
+
+    private int mode = MODE_SELECT;
+
     private LinkedList<UmlComponent> editorObjects;
-    public UmlEditorCanvas(){
+    private LinkedList<UmlConnectionLine> connectionLines;
+
+    public UmlEditorCanvas(int width, int height){
+        connectionLines = new LinkedList<>();
         editorObjects = new LinkedList<>();
         editorObjects.addLast(new UmlClass(50,50));
         editorObjects.addLast(new UmlClass(50,250));
         editorObjects.addLast(new UmlUseCase(300,50));
 
-        editorObjects.add(new UmlConnectionLine(editorObjects.get(1),editorObjects.get(2)));
-        Frame f= new Frame("Canvas Editor");
-        f.setLayout(null);
-        f.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        editorObjects.add(new UmlCompositionLine(editorObjects.get(1),editorObjects.get(2)));
         this.setBackground(Color.WHITE);
-        this.setSize(WINDOW_WIDTH,WINDOW_HEIGHT);
-        f.add(this);
-        f.setVisible(true);
-        this.addMouseListener(new SelectModeListener());
+        this.setSize(width,height);
+        this.addMouseListener(new SelectModeListener(this));
+        this.addMouseListener(new CreateComponentListener(this));
+        this.addMouseListener(new CreateLineListener(this));
+
     }
 
     @Override
@@ -36,96 +43,117 @@ public class UmlEditorCanvas extends Canvas {
         for(UmlComponent component :editorObjects){
             component.draw(g2);
         }
-        g2.drawPolygon(new int[]{250,300,300,250},new int[]{250,200,300,250},3);
-    }
-
-
-
-    public void changeMode(int mode){
-        if(mode == MODE_SELECT){
-            this.getMouseListeners()[0] = new SelectModeListener();
+        for(UmlConnectionLine connectionLine:connectionLines){
+            connectionLine.draw(g2);
         }
     }
 
-    class CreateClassListener implements MouseListener{
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            UmlClass umlClass = new UmlClass(e.getX(),e.getY());
-            editorObjects.add(umlClass);
-            umlClass.draw((Graphics2D) getGraphics());
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) { }
-
-        @Override
-        public void mouseReleased(MouseEvent e) { }
-
-        @Override
-        public void mouseEntered(MouseEvent e) { }
-
-        @Override
-        public void mouseExited(MouseEvent e) { }
+    public LinkedList<UmlComponent> getEditorObjects() {
+        return editorObjects;
     }
-    class SelectModeListener implements MouseListener{
-        Point pressedPoint;
-        boolean touchOnComponent = false;
-        UmlComponent tempComponent;
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            System.out.println("OnMouseClicked");
-            if(touchOnComponent){
-            tempComponent.onSelected();
-            touchOnComponent = false;
-        }
-        repaint();
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public LinkedList<UmlConnectionLine> getConnectionLines() {
+        return connectionLines;
     }
 
     @Override
-        public void mousePressed(MouseEvent e) {
-            System.out.println("OnMousePressed");
-            pressedPoint = e.getPoint();
-            for(UmlComponent component : editorObjects){
+    public void onItemSelected(int itemId) {
+        switch (itemId){
+            case(R.id.select):
+                setMode(MODE_SELECT);
+                break;
+            case (R.id.assoication_line):
+                setMode(MODE_ASSOCIATION_LINE);
+                break;
+            case (R.id.generalization_line):
+                setMode(MODE_GENERALIZATION_LINE);
+                break;
+            case(R.id.composition_line):
+                setMode(MODE_COMPOSITION_LINE);
+                break;
+            case(R.id.create_class):
+                setMode(MODE_CREATE_CLASS);
+                break;
+            case(R.id.create_use_case):
+                setMode(MODE_CREATE_USE_CASE);
+                break;
+            case (R.id.group):
+                groupToComposition();
+                break;
+            case (R.id.un_group):
+                ungrouptoComponent();
+                break;
+            case(R.id.change_name):
+                changeComponentName();
+                break;
+        }
+    }
+
+    private void changeComponentName() {
+        int selectedComponentAmount=0;
+        UmlComponent selectedComponent=null;
+        for(UmlComponent component:editorObjects){
+            if(component.isSelected()){
+                selectedComponent = component;
+                selectedComponentAmount+=1;
+            }
+        }
+        if(selectedComponentAmount==1 && !(selectedComponent instanceof UmlComposition)){
+            ChangeNameCanvas changeNameCanvas = new ChangeNameCanvas(selectedComponent.getComponentName());
+            UmlComponent finalSelectedComponent = selectedComponent;
+            changeNameCanvas.setOnStringResultListener(new OnStringResultListener() {
+                @Override
+                public void onStringResult(String result) {
+                    finalSelectedComponent.setComponentName(result);
+                    repaint();
+                }
+            });
+        }
+    }
+
+    private void groupToComposition(){
+        LinkedList<UmlComponent> selected = new LinkedList<>();
+        for(int i = 0;i<editorObjects.size();i++){
+            if(editorObjects.get(i).isSelected()){
+                selected.addLast(editorObjects.get(i));
+            }
+        }
+        if(!selected.isEmpty()){
+            editorObjects.addLast(new UmlComposition(selected));
+            for(UmlComponent component:selected){
                 component.onUnSelected();
-                if(component.contains(pressedPoint)){
-                    touchOnComponent = true;
-                    tempComponent = component;
-                }
+                editorObjects.removeFirstOccurrence(component);
             }
         }
+        editorObjects.getLast().onSelected();
+        repaint();
+    }
 
-        @Override
-        public void mouseReleased(MouseEvent e) { //choose multiple stuff
-            System.out.println("OnMouseReleased");
-            if(!e.getPoint().equals(pressedPoint)){
-                if(touchOnComponent){
-                    BasicRect rect = tempComponent.getBound();
-                    tempComponent.moveTo(new Point(e.getX()-(pressedPoint.x-rect.minX),
-                            e.getY()-(pressedPoint.y-rect.minY)));
-                    touchOnComponent =false;
-                }
-                else{
-                    BasicRect  boundRect = new BasicRect(pressedPoint,e.getPoint());
-                    for(UmlComponent component:editorObjects){
-                        component.onUnSelected();
-                        if(component.withIn(boundRect)){
-                            component.onSelected();
-                        }
-                    }
-                }
-                repaint();
+    private void ungrouptoComponent(){
+        int selectedComponentAmount=0;
+        UmlComponent selectedComponent=null;
+        for(UmlComponent component:editorObjects){
+            if(component.isSelected()){
+                selectedComponent = component;
+                selectedComponentAmount+=1;
             }
         }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
+        if(selectedComponentAmount==1&&selectedComponent instanceof UmlComposition){
+            LinkedList<UmlComponent> components = ((UmlComposition)selectedComponent).getChildList();
+            editorObjects.removeFirstOccurrence(selectedComponent);
+            for(UmlComponent component:components){
+                editorObjects.addLast(component);
+                component.onSelected();
+            }
         }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
-        }
+        repaint();
     }
 }
