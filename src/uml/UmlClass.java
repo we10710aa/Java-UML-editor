@@ -22,8 +22,10 @@ public class UmlClass extends UmlComponent {
         this.height = DEFAULT_HEIGHT;
         attributes = new ArrayList<>();
         operations = new ArrayList<>();
-        classNameShape = new BasicRect(x, y, DEFAULT_WIDTH, 30);
-        classAttributeShape = new BasicRect(x, y + 30, DEFAULT_WIDTH, DEFAULT_HEIGHT - 30);
+        classNameShape = new BasicRect(x, y, DEFAULT_WIDTH, 30,BasicRect.SOLID);
+        classNameShape.setFillColor(Color.gray);
+        classAttributeShape = new BasicRect(x, y + 30, DEFAULT_WIDTH, DEFAULT_HEIGHT - 30,BasicRect.SOLID);
+        classAttributeShape.setFillColor(Color.gray);
         this.classNameBasicText = new BasicText(classNameShape.getBound(), "Default class", BasicText.LAYOUT_CENTER);
         setConnectionPort();
         setComponentName("Default class");

@@ -13,7 +13,8 @@ public class UmlUseCase extends UmlComponent{
         this.width = DEFAULT_WIDTH;
         this.height = DEFAULT_HEIGHT;
         this.useCaseNameBasicText = new BasicText(this.getBound(),"Default",BasicText.LAYOUT_CENTER);
-        useCaseOval = new BasicOval(minX,minY,width,height);
+        useCaseOval = new BasicOval(minX,minY,width,height,BasicOval.SOLID);
+        useCaseOval.setFillColor(Color.gray);
         setConnectionPort();
         setComponentName("Default");
     }

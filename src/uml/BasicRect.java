@@ -7,9 +7,10 @@ import static java.lang.Math.min;
 
 public class BasicRect extends BasicComponent {
 
-    public static int HOLLOW =0;
-    public static int SOLID=1;
+    public static final int HOLLOW =0;
+    public static final int SOLID=1;
     private int fillType=0;
+    private Color fillColor = Color.BLACK;
 
     public BasicRect(int x,int y,int width,int height){
         super(x,y,width,height);
@@ -37,8 +38,15 @@ public class BasicRect extends BasicComponent {
             graphics2D.drawRect(minX,minY,width,height);
         }
         else if (fillType == SOLID){
+            graphics2D.setColor(fillColor);
             graphics2D.fillRect(minX,minY,width,height);
+            graphics2D.setColor(Color.BLACK);
+            graphics2D.drawRect(minX,minY,width,height);
         }
         Font f = new Font("Dialog", Font.BOLD, 12);
+    }
+
+    public void setFillColor(Color color){
+        this.fillColor =color;
     }
 }
