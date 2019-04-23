@@ -5,10 +5,12 @@ import uml.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 
-public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener {
+public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, ActionListener {
     public static final int MODE_SELECT = 1;
     public static final int MODE_ASSOCIATION_LINE=2;
     public static final int MODE_GENERALIZATION_LINE = 3;
@@ -24,11 +26,6 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener {
     public UmlEditorCanvas(int width, int height){
         connectionLines = new LinkedList<>();
         editorObjects = new LinkedList<>();
-        editorObjects.addLast(new UmlClass(50,50));
-        editorObjects.addLast(new UmlClass(50,250));
-        editorObjects.addLast(new UmlUseCase(300,50));
-
-        editorObjects.add(new UmlCompositionLine(editorObjects.get(1),editorObjects.get(2)));
         this.setBackground(Color.WHITE);
         this.setSize(width,height);
         this.addMouseListener(new SelectModeListener(this));
@@ -84,15 +81,6 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener {
                 break;
             case(R.id.create_use_case):
                 setMode(MODE_CREATE_USE_CASE);
-                break;
-            case (R.id.group):
-                groupToComposition();
-                break;
-            case (R.id.un_group):
-                ungrouptoComponent();
-                break;
-            case(R.id.change_name):
-                changeComponentName();
                 break;
         }
     }
@@ -155,5 +143,21 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener {
             }
         }
         repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(mode!=MODE_SELECT){
+            return;
+        }
+        if(e.getActionCommand().equals("group")){
+            groupToComposition();
+        }
+        else if(e.getActionCommand().equals("ungroup")){
+            ungrouptoComponent();
+        }
+        else if(e.getActionCommand().equals("changeName")){
+            changeComponentName();
+        }
     }
 }

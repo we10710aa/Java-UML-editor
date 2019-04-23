@@ -27,11 +27,6 @@ public class UmlEditorControl extends Canvas implements MouseListener{
         controlButtons.add(new BasicButton(10,290,"Create class", R.id.create_class));
         controlButtons.add(new BasicButton(10,360,"Create use case", R.id.create_use_case));
 
-        oneTimeButtons = new ArrayList<>();
-        oneTimeButtons.add(new BasicButton(10,430,"Group", R.id.group));
-        oneTimeButtons.add(new BasicButton(10,500,"Ungroup", R.id.un_group));
-        oneTimeButtons.add(new BasicButton(10,570,"Change Name",R.id.change_name));
-
         controlButtons.get(0).setState(BasicButton.STATE_SELECTED);
         selectedButon = controlButtons.get(0);
     }
@@ -41,9 +36,6 @@ public class UmlEditorControl extends Canvas implements MouseListener{
         Graphics2D graphics2D = (Graphics2D)g;
         g.drawLine(getWidth(),0,getWidth(),getHeight());
         for(BasicButton button:controlButtons){
-            button.draw(graphics2D);
-        }
-        for(BasicButton button:oneTimeButtons){
             button.draw(graphics2D);
         }
     }
@@ -59,33 +51,21 @@ public class UmlEditorControl extends Canvas implements MouseListener{
         for (BasicButton button:controlButtons){
             if(!button.equals(selectedButon)){
                 button.setState(BasicButton.STATE_UNSELECTED);
-            }
+        }
         }
         if(listener!=null){
             listener.onItemSelected(selectedButon.getId());
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if(selectedButon.getId()!=R.id.select){return;}
-        for(BasicButton button:oneTimeButtons){
-            if(button.contains(e.getPoint())){
-                button.setState(BasicButton.STATE_SELECTED);
-                if(listener!=null){
-                    listener.onItemSelected(button.getId());
-                }
-            }
         }
         repaint();
     }
 
     @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e) {
-        for(BasicButton button:oneTimeButtons){
-            button.setState(BasicButton.STATE_UNSELECTED);
-            repaint();
-        }
+
     }
 
     @Override

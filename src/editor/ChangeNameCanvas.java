@@ -96,7 +96,6 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
             textField.deleteCurrentPosition();
         }
         else{
-            System.out.println(e.getExtendedKeyCode());
             textField.addToCurrentPosition(e.getKeyChar());
         }
         repaint();
