@@ -7,10 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.util.LinkedList;
 
 
-public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, ActionListener {
+public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, ActionListener {
     public static final int MODE_SELECT = 1;
     public static final int MODE_ASSOCIATION_LINE=2;
     public static final int MODE_GENERALIZATION_LINE = 3;
@@ -20,6 +21,9 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, A
 
     private int mode = MODE_SELECT;
 
+    private int preferredWidth;
+    private int preferredHeight;
+
     private LinkedList<UmlComponent> editorObjects;
     private LinkedList<UmlConnectionLine> connectionLines;
 
@@ -27,15 +31,23 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, A
         connectionLines = new LinkedList<>();
         editorObjects = new LinkedList<>();
         this.setBackground(Color.WHITE);
-        this.setSize(width,height);
-        this.addMouseListener(new SelectModeListener(this));
+        preferredWidth = width;
+        preferredHeight = height;
+        SelectModeListener selectModeListener = new SelectModeListener(this);
+        this.addMouseListener(selectModeListener);
         this.addMouseListener(new CreateComponentListener(this));
         this.addMouseListener(new CreateLineListener(this));
-
+        this.addMouseMotionListener(selectModeListener);
     }
 
     @Override
-    public void paint(Graphics g) {
+    public Dimension getPreferredSize() {
+        return new Dimension(preferredWidth,preferredHeight);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         for(UmlComponent component :editorObjects){
             component.draw(g2);
@@ -101,7 +113,6 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, A
                 @Override
                 public void onStringResult(String result) {
                     finalSelectedComponent.setComponentName(result);
-                    repaint();
                 }
             });
         }
@@ -122,7 +133,6 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, A
             }
         }
         editorObjects.getLast().onSelected();
-        repaint();
     }
 
     private void ungrouptoComponent(){
@@ -142,7 +152,6 @@ public class UmlEditorCanvas extends Canvas implements OnItemSelectedListener, A
                 component.onSelected();
             }
         }
-        repaint();
     }
 
     @Override

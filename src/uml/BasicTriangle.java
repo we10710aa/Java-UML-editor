@@ -10,8 +10,8 @@ public class BasicTriangle extends BasicComponent {
 
     private int  direction;
 
-    public BasicTriangle(int pointX, int pointY, int triangleWidth, int triangleHeight,int direction){
-        super(pointX,pointY,triangleWidth,triangleHeight);
+    public BasicTriangle(Point target, int triangleWidth, int triangleHeight,int direction){
+        super(target.x,target.y,triangleWidth,triangleHeight);
         this.direction = direction;
     }
 

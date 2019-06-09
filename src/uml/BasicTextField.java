@@ -2,7 +2,7 @@ package uml;
 
 import java.awt.*;
 
-public class BasicTextField extends BasicText {
+public class BasicTextField extends TextView {
     private int currentEditingPosition;
     private int editingX;
     public BasicTextField(int x, int y, int width, int height, String text, int layoutMode) {

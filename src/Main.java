@@ -14,20 +14,33 @@ public class Main{
     UmlEditorControl umlEditorControl;
     UmlEditorCanvas umlEditorCanvas;
     JFrame frame;
+    private Thread repaintThread;
 
     public Main(){
-        umlEditorControl = new UmlEditorControl(150,WINDOW_HEIGHT-50);
-        umlEditorCanvas = new UmlEditorCanvas(WINDOW_WIDTH-150,WINDOW_HEIGHT-50);
+        umlEditorControl = new UmlEditorControl(150,WINDOW_HEIGHT);
+        umlEditorCanvas = new UmlEditorCanvas(WINDOW_WIDTH-180,WINDOW_HEIGHT);
         umlEditorControl.setOnItemSelectedListener(umlEditorCanvas);
         frame = new JFrame("Uml Editor");
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);
-        flowLayout.setHgap(0);
+        flowLayout.setHgap(5);
         frame.setLayout(flowLayout);
         frame.add(umlEditorControl);
         frame.add(umlEditorCanvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(getMenuBar(umlEditorCanvas));
+        repaintThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        frame.repaint();
+                        Thread.sleep(1000 / 30);
+                    }
+                } catch (InterruptedException ie) {
+                }
+            }
+        });
 
     }
 
@@ -58,6 +71,7 @@ public class Main{
 
     public void start(){
         frame.setVisible(true);
+        repaintThread.start();
     }
 
     public static void main(String[] args){

@@ -2,7 +2,7 @@ package editor;
 
 import editor.listener.OnStringResultListener;
 import uml.BasicButton;
-import uml.BasicText;
+import uml.TextView;
 import uml.BasicTextField;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
         jFrame = new JFrame("change name");
         jFrame.setSize(600,150);
         this.setSize(600,150);
-        textField = new BasicTextField(0,0,400,130,originalString,BasicText.LAYOUT_CENTER_LEFT);
+        textField = new BasicTextField(0,0,400,130,originalString, TextView.LAYOUT_CENTER_LEFT);
         textField.setTextFont(new Font("textfont",Font.BOLD,30));
         okButton = new BasicButton(420,50,"Ok",R.id.change_name_ok);
         cancelButton = new BasicButton(520,50,"Cancel",R.id.change_name_cancel);
@@ -45,7 +45,6 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
     public void mouseClicked(MouseEvent e) {
         if(textField.contains(e.getPoint())){
             textField.setCurrentEditingPosition(e.getX(),(Graphics2D)getGraphics());
-            repaint();
         }
     }
 
@@ -61,23 +60,19 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
 
         }
         repaint();
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if(okButton.contains(e.getPoint())){
             okButton.setState(BasicButton.STATE_UNSELECTED);
-            repaint();
             jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
         }
         else if(cancelButton.contains(e.getPoint())){
             cancelButton.setState(BasicButton.STATE_UNSELECTED);
-            repaint();
             jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
         }
-
-
+        repaint();
     }
 
     @Override
@@ -93,6 +88,9 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
     @Override
     public void keyTyped(KeyEvent e) {
         if(e.getExtendedKeyCode()==8){
+            textField.deleteCurrentPosition();
+        }
+        else if(e.getKeyChar() == KeyEvent.VK_BACK_SPACE){
             textField.deleteCurrentPosition();
         }
         else{

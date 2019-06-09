@@ -1,10 +1,8 @@
 package uml;
 
-import uml.BasicComponent;
-
 import java.awt.*;
 
-public class BasicText extends BasicComponent {
+public class TextView extends BasicComponent {
     private String text;
     private Font textFont = new Font("text",Font.BOLD,14);
 
@@ -14,7 +12,7 @@ public class BasicText extends BasicComponent {
     public static final int LAYOUT_TOPC_ENTER=2;
     public static final int LAYOUT_BOTTOM_LEFT=3;
     public static final int LAYOUT_CENTER_LEFT=4;
-    public BasicText(int x,int y,int width,int height,String text,int layoutMode){
+    public TextView(int x, int y, int width, int height, String text, int layoutMode){
         this.minX = x;
         this.minY = y;
         this.width = width;
@@ -22,7 +20,7 @@ public class BasicText extends BasicComponent {
         this.text = text;
         this.layoutMode = layoutMode;
     }
-    public BasicText(BasicRect boundingBox,String text,int layoutMode){
+    public TextView(BasicRect boundingBox, String text, int layoutMode){
         this(boundingBox.minX,boundingBox.minY,boundingBox.width,boundingBox.height,text,layoutMode);
     }
 

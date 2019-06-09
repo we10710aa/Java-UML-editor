@@ -11,10 +11,10 @@ public class BasicButton extends BasicComponent {
     private int id;
     private boolean enabled = true;
 
-    private BasicText buttonName;
+    private TextView buttonName;
     public BasicButton(int x,int y,String name,int id){
         super(x,y,DEFAULT_WIDTH,DEFAULT_HEIGHT);
-        buttonName= new BasicText(getBound(),name,BasicText.LAYOUT_CENTER);
+        buttonName= new TextView(getBound(),name, TextView.LAYOUT_CENTER);
         buttonName.setTextFont(new Font("button",Font.BOLD,12));
         this.id =id;
     }

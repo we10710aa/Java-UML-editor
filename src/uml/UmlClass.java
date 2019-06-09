@@ -7,9 +7,9 @@ import java.util.List;
 public class UmlClass extends UmlComponent {
     private static final int DEFAULT_WIDTH=100;
     private static final int DEFAULT_HEIGHT=150;
-    private List<BasicText> attributes;
-    private List<BasicText> operations;
-    private BasicText classNameBasicText;
+    private List<TextView> attributes;
+    private List<TextView> operations;
+    private TextView classNameTextView;
 
     private BasicRect classNameShape;
     private BasicRect classAttributeShape;
@@ -26,7 +26,7 @@ public class UmlClass extends UmlComponent {
         classNameShape.setFillColor(Color.gray);
         classAttributeShape = new BasicRect(x, y + 30, DEFAULT_WIDTH, DEFAULT_HEIGHT - 30,BasicRect.SOLID);
         classAttributeShape.setFillColor(Color.gray);
-        this.classNameBasicText = new BasicText(classNameShape.getBound(), "Default class", BasicText.LAYOUT_CENTER);
+        this.classNameTextView = new TextView(classNameShape.getBound(), "Default class", TextView.LAYOUT_CENTER);
         setConnectionPort();
         setComponentName("Default class");
     }
@@ -38,7 +38,7 @@ public class UmlClass extends UmlComponent {
         if(selected){
             drawConnectionPort(graphics2D);
         }
-        classNameBasicText.draw(graphics2D);
+        classNameTextView.draw(graphics2D);
     }
 
     @Override
@@ -53,20 +53,20 @@ public class UmlClass extends UmlComponent {
         super.moveTo(p);
         classNameShape.moveTo(p);
         classAttributeShape.moveTo(new Point(p.x,p.y+30));
-        classNameBasicText.moveTo(p);
+        classNameTextView.moveTo(p);
         setConnectionPort();
     }
-    public String getClassNameBasicText() {
-        return this.classNameBasicText.getText();
+    public String getClassNameTextView() {
+        return this.classNameTextView.getText();
     }
 
-    public void setClassNameBasicText(String classNameBasicText) {
-        this.classNameBasicText.setText(classNameBasicText);
+    public void setClassNameTextView(String classNameTextView) {
+        this.classNameTextView.setText(classNameTextView);
     }
 
     @Override
     public void setComponentName(String componentName) {
         super.setComponentName(componentName);
-        setClassNameBasicText(componentName);
+        setClassNameTextView(componentName);
     }
 }

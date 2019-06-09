@@ -29,8 +29,8 @@ public class CreateComponentListener implements MouseListener {
                 break;
         }
 
-        umlEditorCanvas.repaint();
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) { }

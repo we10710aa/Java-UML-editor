@@ -62,7 +62,6 @@ public class CreateLineListener implements MouseListener {
                     break;
             }
             touchOnComponent=false;
-            umlEditorCanvas.repaint();
         }
     }
 

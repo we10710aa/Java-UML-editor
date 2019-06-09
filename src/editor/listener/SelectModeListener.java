@@ -6,72 +6,79 @@ import uml.UmlClass;
 import uml.UmlComponent;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class SelectModeListener implements MouseListener {
+public class SelectModeListener extends MouseAdapter {
     private Point pressedPoint;
+    private Dimension relativePosition;
     boolean touchOnComponent = false;
     private UmlComponent tempComponent;
     private UmlEditorCanvas umlEditorCanvas;
 
-    public SelectModeListener(UmlEditorCanvas canvas){
+    public SelectModeListener(UmlEditorCanvas canvas) {
         this.umlEditorCanvas = canvas;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT){return;}
-        if(touchOnComponent) {
+        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
+            return;
+        }
+        if (touchOnComponent) {
             tempComponent.onSelected();
             touchOnComponent = false;
         }
-        umlEditorCanvas.repaint();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT){return;}
+        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
+            return;
+        }
         pressedPoint = e.getPoint();
-        for(UmlComponent component : umlEditorCanvas.getEditorObjects()){
+        for (UmlComponent component : umlEditorCanvas.getEditorObjects()) {
             component.onUnSelected();
-            if(component.contains(pressedPoint)){
+            if (component.contains(pressedPoint)) {
                 touchOnComponent = true;
                 tempComponent = component;
+                relativePosition = new Dimension(e.getX()-component.minX,e.getY()-component.minY);
             }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) { //choose multiple stuff
-        if(umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT){return;}
-        if(!e.getPoint().equals(pressedPoint)){
-            if(touchOnComponent){
-                BasicRect rect = tempComponent.getBound();
-                tempComponent.moveTo(new Point(e.getX()-(pressedPoint.x-rect.minX),
-                        e.getY()-(pressedPoint.y-rect.minY)));
-                touchOnComponent =false;
-            }
-            else{
-                BasicRect  boundRect = new BasicRect(pressedPoint,e.getPoint());
-                for(UmlComponent component:umlEditorCanvas.getEditorObjects()){
+        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
+            return;
+        }
+        if (!e.getPoint().equals(pressedPoint)) {
+            if (touchOnComponent) {
+                tempComponent.moveTo(new Point(e.getX()-relativePosition.width,e.getY()-relativePosition.height));
+                touchOnComponent = false;
+            } else {
+                BasicRect boundRect = new BasicRect(pressedPoint, e.getPoint());
+                for (UmlComponent component : umlEditorCanvas.getEditorObjects()) {
                     component.onUnSelected();
-                    if(component.withIn(boundRect)){
+                    if (component.withIn(boundRect)) {
                         component.onSelected();
                     }
                 }
             }
-            umlEditorCanvas.repaint();
         }
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseDragged(MouseEvent e) {
+        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
+            return;
+        }
 
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
+        if (touchOnComponent) {
+            tempComponent.moveTo(new Point(e.getX()-relativePosition.width,e.getY()-relativePosition.height));
+        }
 
     }
 }
