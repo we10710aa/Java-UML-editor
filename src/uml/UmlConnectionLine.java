@@ -1,7 +1,5 @@
 package uml;
 
-import editor.R;
-
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 

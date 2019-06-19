@@ -9,9 +9,6 @@ import static java.util.Collections.max;
 import static java.util.Collections.min;
 
 public class UmlComposition extends UmlComponent {
-    public LinkedList<UmlComponent> getChildList() {
-        return childList;
-    }
 
     private LinkedList<UmlComponent> childList;
 
@@ -78,4 +75,15 @@ public class UmlComposition extends UmlComponent {
         return t;
 
     }
+
+    @Override
+    public LinkedList<UmlComponent> getChildComponent() {
+        return this.childList;
+    }
+
+    @Override
+    public void changeComponentName() {
+
+    }
+
 }

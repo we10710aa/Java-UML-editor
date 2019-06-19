@@ -5,10 +5,11 @@ import uml.UmlClass;
 import uml.UmlUseCase;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class CreateComponentListener implements MouseListener {
+public class CreateComponentListener extends MouseAdapter {
 
     private UmlEditorCanvas umlEditorCanvas;
 
@@ -18,8 +19,6 @@ public class CreateComponentListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if((umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_CREATE_CLASS)&&
-                (umlEditorCanvas.getMode()!= UmlEditorCanvas.MODE_CREATE_USE_CASE)){return;}
         switch (umlEditorCanvas.getMode()){
             case(UmlEditorCanvas.MODE_CREATE_CLASS):
                 umlEditorCanvas.getEditorObjects().addLast(new UmlClass(e.getX(),e.getY()));

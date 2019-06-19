@@ -5,13 +5,11 @@ import uml.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 
-public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, ActionListener {
+public class UmlEditorCanvas extends JPanel implements ActionListener {
     public static final int MODE_SELECT = 1;
     public static final int MODE_ASSOCIATION_LINE=2;
     public static final int MODE_GENERALIZATION_LINE = 3;
@@ -19,7 +17,12 @@ public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, A
     public static final int MODE_CREATE_CLASS = 5;
     public static final int MODE_CREATE_USE_CASE = 6;
 
-    private int mode = MODE_SELECT;
+    private MouseAdapter selectAdapter;
+    private MouseAdapter createComponentAdapter;
+    private MouseAdapter createLineAdapter;
+
+    private int currentMode;
+
 
     private int preferredWidth;
     private int preferredHeight;
@@ -27,32 +30,33 @@ public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, A
     private LinkedList<UmlComponent> editorObjects;
     private LinkedList<UmlConnectionLine> connectionLines;
 
-    public UmlEditorCanvas(int width, int height){
+    public UmlEditorCanvas(int width, int height) {
         connectionLines = new LinkedList<>();
         editorObjects = new LinkedList<>();
         this.setBackground(Color.WHITE);
         preferredWidth = width;
         preferredHeight = height;
-        SelectModeListener selectModeListener = new SelectModeListener(this);
-        this.addMouseListener(selectModeListener);
-        this.addMouseListener(new CreateComponentListener(this));
-        this.addMouseListener(new CreateLineListener(this));
-        this.addMouseMotionListener(selectModeListener);
+        selectAdapter = new SelectModeListener(this);
+        createComponentAdapter = new CreateComponentListener(this);
+        createLineAdapter = new CreateLineListener(this);
+        this.addMouseListener(selectAdapter);
+        this.addMouseMotionListener(selectAdapter);
+        this.currentMode=1;
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(preferredWidth,preferredHeight);
+        return new Dimension(preferredWidth, preferredHeight);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
-        for(UmlComponent component :editorObjects){
+        Graphics2D g2 = (Graphics2D) g;
+        for (UmlComponent component : editorObjects) {
             component.draw(g2);
         }
-        for(UmlConnectionLine connectionLine:connectionLines){
+        for (UmlConnectionLine connectionLine : connectionLines) {
             connectionLine.draw(g2);
         }
     }
@@ -61,73 +65,68 @@ public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, A
         return editorObjects;
     }
 
-    public int getMode() {
-        return mode;
-    }
 
     public void setMode(int mode) {
-        this.mode = mode;
+        this.currentMode = mode;
+        this.removeAllMouseListener();
+        switch (mode){
+            case MODE_SELECT:
+                this.addMouseListener(selectAdapter);
+                this.addMouseMotionListener(selectAdapter);
+                break;
+            case MODE_ASSOCIATION_LINE:
+            case MODE_COMPOSITION_LINE:
+            case MODE_GENERALIZATION_LINE:
+                this.addMouseListener(createLineAdapter);
+                this.addMouseMotionListener(createLineAdapter);
+                break;
+            case MODE_CREATE_CLASS:
+            case MODE_CREATE_USE_CASE:
+                this.addMouseListener(createComponentAdapter);
+                this.addMouseMotionListener(createComponentAdapter);
+                break;
+        }
     }
+
+    private void removeAllMouseListener(){
+        for(MouseListener listener:this.getMouseListeners()){
+            this.removeMouseListener(listener);
+        }
+        for(MouseMotionListener listener:this.getMouseMotionListeners()){
+            this.removeMouseMotionListener(listener);
+        }
+    }
+
+    public int getMode(){ return this.currentMode; }
 
     public LinkedList<UmlConnectionLine> getConnectionLines() {
         return connectionLines;
     }
 
-    @Override
-    public void onItemSelected(int itemId) {
-        switch (itemId){
-            case(R.id.select):
-                setMode(MODE_SELECT);
-                break;
-            case (R.id.assoication_line):
-                setMode(MODE_ASSOCIATION_LINE);
-                break;
-            case (R.id.generalization_line):
-                setMode(MODE_GENERALIZATION_LINE);
-                break;
-            case(R.id.composition_line):
-                setMode(MODE_COMPOSITION_LINE);
-                break;
-            case(R.id.create_class):
-                setMode(MODE_CREATE_CLASS);
-                break;
-            case(R.id.create_use_case):
-                setMode(MODE_CREATE_USE_CASE);
-                break;
-        }
-    }
-
     private void changeComponentName() {
-        int selectedComponentAmount=0;
-        UmlComponent selectedComponent=null;
-        for(UmlComponent component:editorObjects){
-            if(component.isSelected()){
+        int selectedComponentAmount = 0;
+        UmlComponent selectedComponent = null;
+        for (UmlComponent component : editorObjects) {
+            if (component.isSelected()) {
                 selectedComponent = component;
-                selectedComponentAmount+=1;
+                selectedComponentAmount += 1;
             }
         }
-        if(selectedComponentAmount==1 && !(selectedComponent instanceof UmlComposition)){
-            ChangeNameCanvas changeNameCanvas = new ChangeNameCanvas(selectedComponent.getComponentName());
-            UmlComponent finalSelectedComponent = selectedComponent;
-            changeNameCanvas.setOnStringResultListener(new OnStringResultListener() {
-                @Override
-                public void onStringResult(String result) {
-                    finalSelectedComponent.setComponentName(result);
-                }
-            });
+        if (selectedComponentAmount == 1) {
+            selectedComponent.changeComponentName();
         }
     }
 
-    private void groupToComposition(){
+    private void groupToComposition() {
         LinkedList<UmlComponent> selected = new LinkedList<>();
-        for(int i = 0;i<editorObjects.size();i++){
-            if(editorObjects.get(i).isSelected()){
+        for (int i = 0; i < editorObjects.size(); i++) {
+            if (editorObjects.get(i).isSelected()) {
                 selected.addLast(editorObjects.get(i));
             }
         }
-        if(!selected.isEmpty()){
+        if (!selected.isEmpty()) {
             editorObjects.addLast(new UmlComposition(selected));
-            for(UmlComponent component:selected){
+            for (UmlComponent component : selected) {
                 component.onUnSelected();
                 editorObjects.removeFirstOccurrence(component);
             }
@@ -135,37 +134,38 @@ public class UmlEditorCanvas extends JPanel implements OnItemSelectedListener, A
         editorObjects.getLast().onSelected();
     }
 
-    private void ungrouptoComponent(){
-        int selectedComponentAmount=0;
-        UmlComponent selectedComponent=null;
-        for(UmlComponent component:editorObjects){
-            if(component.isSelected()){
+    private void ungrouptoComponent() {
+        int selectedComponentAmount = 0;
+        UmlComponent selectedComponent = null;
+        for (UmlComponent component : editorObjects) {
+            if (component.isSelected()) {
                 selectedComponent = component;
-                selectedComponentAmount+=1;
+                selectedComponentAmount += 1;
             }
         }
-        if(selectedComponentAmount==1&&selectedComponent instanceof UmlComposition){
-            LinkedList<UmlComponent> components = ((UmlComposition)selectedComponent).getChildList();
-            editorObjects.removeFirstOccurrence(selectedComponent);
-            for(UmlComponent component:components){
-                editorObjects.addLast(component);
-                component.onSelected();
+        if (selectedComponentAmount == 1) {
+            LinkedList<UmlComponent> components = selectedComponent.getChildComponent();
+            if (components != null) {
+                editorObjects.removeFirstOccurrence(selectedComponent);
+                for (UmlComponent component : components) {
+                    editorObjects.addLast(component);
+                    component.onSelected();
+                }
             }
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(mode!=MODE_SELECT){
+        if (getMode()!=MODE_SELECT) {
             return;
         }
-        if(e.getActionCommand().equals("group")){
+        if (e.getActionCommand().equals("group")) {
             groupToComposition();
-        }
-        else if(e.getActionCommand().equals("ungroup")){
+        } else if (e.getActionCommand().equals("ungroup")) {
             ungrouptoComponent();
-        }
-        else if(e.getActionCommand().equals("changeName")){
+        } else if (e.getActionCommand().equals("changeName")) {
+            System.out.println("hello");
             changeComponentName();
         }
     }

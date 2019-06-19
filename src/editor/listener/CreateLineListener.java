@@ -4,10 +4,11 @@ import editor.UmlEditorCanvas;
 import uml.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class CreateLineListener implements MouseListener {
+public class CreateLineListener extends MouseAdapter {
     private Point pressedPoint;
     boolean touchOnComponent = false;
     private UmlComponent tempComponent;
@@ -23,9 +24,6 @@ public class CreateLineListener implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if((umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_ASSOCIATION_LINE)&&
-                (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_COMPOSITION_LINE&&
-                        (umlEditorCanvas.getMode()!= UmlEditorCanvas.MODE_GENERALIZATION_LINE))){return;}
         pressedPoint = e.getPoint();
         for(UmlComponent component : umlEditorCanvas.getEditorObjects()){
             if(component.contains(pressedPoint)){
@@ -37,9 +35,6 @@ public class CreateLineListener implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if((umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_ASSOCIATION_LINE)&&
-                (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_COMPOSITION_LINE&&
-                        (umlEditorCanvas.getMode()!= UmlEditorCanvas.MODE_GENERALIZATION_LINE))){return;}
         UmlComponent lastTouced = null;
         for(UmlComponent component:umlEditorCanvas.getEditorObjects()){
             if(component.contains(e.getPoint())){

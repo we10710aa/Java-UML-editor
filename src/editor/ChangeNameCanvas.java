@@ -15,14 +15,16 @@ public class ChangeNameCanvas extends Canvas implements MouseListener, KeyListen
     BasicButton cancelButton;
     BasicTextField textField;
     JFrame jFrame;
+    private static final int OK =0;
+    private static final int CANCLE=1;
     public ChangeNameCanvas(String originalString){
         jFrame = new JFrame("change name");
         jFrame.setSize(600,150);
         this.setSize(600,150);
         textField = new BasicTextField(0,0,400,130,originalString, TextView.LAYOUT_CENTER_LEFT);
         textField.setTextFont(new Font("textfont",Font.BOLD,30));
-        okButton = new BasicButton(420,50,"Ok",R.id.change_name_ok);
-        cancelButton = new BasicButton(520,50,"Cancel",R.id.change_name_cancel);
+        okButton = new BasicButton(420,50,"Ok",OK);
+        cancelButton = new BasicButton(520,50,"Cancel",CANCLE);
         this.addMouseListener(this);
         this.addKeyListener(this);
         jFrame.add(this);

@@ -12,6 +12,11 @@ public class TextView extends BasicComponent {
     public static final int LAYOUT_TOPC_ENTER=2;
     public static final int LAYOUT_BOTTOM_LEFT=3;
     public static final int LAYOUT_CENTER_LEFT=4;
+
+
+
+    private boolean drawBound = false;
+
     public TextView(int x, int y, int width, int height, String text, int layoutMode){
         this.minX = x;
         this.minY = y;
@@ -28,7 +33,11 @@ public class TextView extends BasicComponent {
     public void draw(Graphics2D graphics2D) {
         Point layout = getLayoutPoint(graphics2D);
         graphics2D.setFont(textFont);
-        graphics2D.drawString(text,layout.x,layout.y);
+        for(String line : this.text.split("\n")){
+            System.out.println(line);
+            graphics2D.drawString(line,layout.x,layout.y);
+            layout.y+=graphics2D.getFontMetrics().getHeight();
+        }
     }
 
     Point getLayoutPoint(Graphics2D graphics2D){
@@ -83,4 +92,7 @@ public class TextView extends BasicComponent {
         this.layoutMode = layoutMode;
     }
 
+    public void setDrawBound(boolean drawBound) {
+        this.drawBound = drawBound;
+    }
 }

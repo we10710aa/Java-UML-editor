@@ -21,9 +21,6 @@ public class SelectModeListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
-            return;
-        }
         if (touchOnComponent) {
             tempComponent.onSelected();
             touchOnComponent = false;
@@ -32,9 +29,6 @@ public class SelectModeListener extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
-            return;
-        }
         pressedPoint = e.getPoint();
         for (UmlComponent component : umlEditorCanvas.getEditorObjects()) {
             component.onUnSelected();
@@ -48,9 +42,6 @@ public class SelectModeListener extends MouseAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) { //choose multiple stuff
-        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
-            return;
-        }
         if (!e.getPoint().equals(pressedPoint)) {
             if (touchOnComponent) {
                 tempComponent.moveTo(new Point(e.getX()-relativePosition.width,e.getY()-relativePosition.height));
@@ -69,10 +60,6 @@ public class SelectModeListener extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (umlEditorCanvas.getMode() != UmlEditorCanvas.MODE_SELECT) {
-            return;
-        }
-
         if (touchOnComponent) {
             tempComponent.moveTo(new Point(e.getX()-relativePosition.width,e.getY()-relativePosition.height));
         }

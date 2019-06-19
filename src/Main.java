@@ -17,9 +17,9 @@ public class Main{
     private Thread repaintThread;
 
     public Main(){
-        umlEditorControl = new UmlEditorControl(150,WINDOW_HEIGHT);
         umlEditorCanvas = new UmlEditorCanvas(WINDOW_WIDTH-180,WINDOW_HEIGHT);
-        umlEditorControl.setOnItemSelectedListener(umlEditorCanvas);
+        umlEditorControl = new UmlEditorControl(150,WINDOW_HEIGHT,umlEditorCanvas);
+
         frame = new JFrame("Uml Editor");
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT);

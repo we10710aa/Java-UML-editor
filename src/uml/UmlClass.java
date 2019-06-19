@@ -9,7 +9,6 @@ public class UmlClass extends UmlComponent {
     private static final int DEFAULT_HEIGHT=150;
     private List<TextView> attributes;
     private List<TextView> operations;
-    private TextView classNameTextView;
 
     private BasicRect classNameShape;
     private BasicRect classAttributeShape;
@@ -26,9 +25,8 @@ public class UmlClass extends UmlComponent {
         classNameShape.setFillColor(Color.gray);
         classAttributeShape = new BasicRect(x, y + 30, DEFAULT_WIDTH, DEFAULT_HEIGHT - 30,BasicRect.SOLID);
         classAttributeShape.setFillColor(Color.gray);
-        this.classNameTextView = new TextView(classNameShape.getBound(), "Default class", TextView.LAYOUT_CENTER);
+        this.componentName = new TextView(classNameShape.getBound(), "Default class", TextView.LAYOUT_CENTER);
         setConnectionPort();
-        setComponentName("Default class");
     }
 
     @Override
@@ -38,7 +36,7 @@ public class UmlClass extends UmlComponent {
         if(selected){
             drawConnectionPort(graphics2D);
         }
-        classNameTextView.draw(graphics2D);
+        componentName.draw(graphics2D);
     }
 
     @Override
@@ -53,20 +51,8 @@ public class UmlClass extends UmlComponent {
         super.moveTo(p);
         classNameShape.moveTo(p);
         classAttributeShape.moveTo(new Point(p.x,p.y+30));
-        classNameTextView.moveTo(p);
+        componentName.moveTo(p);
         setConnectionPort();
     }
-    public String getClassNameTextView() {
-        return this.classNameTextView.getText();
-    }
 
-    public void setClassNameTextView(String classNameTextView) {
-        this.classNameTextView.setText(classNameTextView);
-    }
-
-    @Override
-    public void setComponentName(String componentName) {
-        super.setComponentName(componentName);
-        setClassNameTextView(componentName);
-    }
 }

@@ -1,19 +1,25 @@
 package uml;
 
+import editor.ChangeNameCanvas;
+import editor.listener.OnStringResultListener;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 
 public class UmlComponent extends BasicComponent {
     boolean selected;
     private List<Port> connectionPortList;
     private List<Port> resizePort;
+
+
     public static final int UPPER_PORT = 0;
     public static final int LOWER_PORT = 1;
     public static final int LEFT_PORT = 2;
     public static final int RIGHT_PORT = 3;
 
-    private String componentName = "";
+    protected TextView componentName=new TextView(this.getBound(),"",TextView.LAYOUT_CENTER);
 
 
     public void onSelected() {
@@ -73,11 +79,24 @@ public class UmlComponent extends BasicComponent {
         return this;
     }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
+    public void changeComponentName() {
+        System.out.println("hello");
+        ChangeNameCanvas changeNameCanvas = new ChangeNameCanvas(this.getComponentName());
+        changeNameCanvas.setOnStringResultListener(new OnStringResultListener() {
+            @Override
+            public void onStringResult(String result) {
+                System.out.println("helllo world");
+                UmlComponent.this.componentName.setText(result);
+            }
+        });
     }
 
     public String getComponentName() {
-        return this.componentName;
+        return this.componentName.getText();
+    }
+
+
+    public LinkedList<UmlComponent> getChildComponent(){
+        return null;
     }
 }

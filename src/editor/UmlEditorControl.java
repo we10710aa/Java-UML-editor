@@ -10,25 +10,26 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UmlEditorControl extends JPanel implements MouseListener{
+public class UmlEditorControl extends JPanel implements MouseListener {
     List<BasicButton> controlButtons;
-    OnItemSelectedListener listener = null;
     BasicButton selectedButon;
     private int preferredWidth;
     private int preferredHeight;
+    private UmlEditorCanvas editorCanvas;
 
-    public UmlEditorControl(int width,int height){
+    public UmlEditorControl(int width, int height, UmlEditorCanvas canvas) {
         this.setBackground(Color.WHITE);
         this.preferredWidth = width;
         this.preferredHeight = height;
+        this.editorCanvas = canvas;
         this.addMouseListener(this);
         controlButtons = new ArrayList<>();
-        controlButtons.add(new BasicButton(30,10,"Select", R.id.select));
-        controlButtons.add(new BasicButton(30,80,"Association line", R.id.assoication_line));
-        controlButtons.add(new BasicButton(30,150,"Generalization", R.id.generalization_line));
-        controlButtons.add(new BasicButton(30,220,"Composition line", R.id.composition_line));
-        controlButtons.add(new BasicButton(30,290,"Create class", R.id.create_class));
-        controlButtons.add(new BasicButton(30,360,"Create use case", R.id.create_use_case));
+        controlButtons.add(new BasicButton(30, 10, "Select", UmlEditorCanvas.MODE_SELECT));
+        controlButtons.add(new BasicButton(30, 80, "Association line", UmlEditorCanvas.MODE_ASSOCIATION_LINE));
+        controlButtons.add(new BasicButton(30, 150, "Generalization", UmlEditorCanvas.MODE_GENERALIZATION_LINE));
+        controlButtons.add(new BasicButton(30, 220, "Composition line", UmlEditorCanvas.MODE_COMPOSITION_LINE));
+        controlButtons.add(new BasicButton(30, 290, "Create class", UmlEditorCanvas.MODE_CREATE_CLASS));
+        controlButtons.add(new BasicButton(30, 360, "Create use case", UmlEditorCanvas.MODE_CREATE_USE_CASE));
 
         controlButtons.get(0).setState(BasicButton.STATE_SELECTED);
         selectedButon = controlButtons.get(0);
@@ -42,29 +43,27 @@ public class UmlEditorControl extends JPanel implements MouseListener{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D graphics2D = (Graphics2D)g;
-        g.drawLine(getWidth(),0,getWidth(),getHeight());
-        for(BasicButton button:controlButtons){
+        Graphics2D graphics2D = (Graphics2D) g;
+        g.drawLine(getWidth(), 0, getWidth(), getHeight());
+        for (BasicButton button : controlButtons) {
             button.draw(graphics2D);
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        for (BasicButton button:controlButtons){
-            if(button.contains(e.getPoint())){
+        for (BasicButton button : controlButtons) {
+            if (button.contains(e.getPoint())) {
                 button.setState(BasicButton.STATE_SELECTED);
                 selectedButon = button;
             }
         }
-        for (BasicButton button:controlButtons){
-            if(!button.equals(selectedButon)){
+        for (BasicButton button : controlButtons) {
+            if (!button.equals(selectedButon)) {
                 button.setState(BasicButton.STATE_UNSELECTED);
+            }
         }
-        }
-        if(listener!=null){
-            listener.onItemSelected(selectedButon.getId());
-        }
+        editorCanvas.setMode(selectedButon.getId());
     }
 
     @Override
@@ -84,9 +83,5 @@ public class UmlEditorControl extends JPanel implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener){
-        this.listener = onItemSelectedListener;
     }
 }
