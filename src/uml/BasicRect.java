@@ -9,7 +9,7 @@ public class BasicRect extends BasicComponent {
 
     public static final int HOLLOW =0;
     public static final int SOLID=1;
-    private int fillType=0;
+    private int fillType=HOLLOW;
     private Color fillColor = Color.BLACK;
 
     public BasicRect(int x,int y,int width,int height){
@@ -48,5 +48,8 @@ public class BasicRect extends BasicComponent {
 
     public void setFillColor(Color color){
         this.fillColor =color;
+    }
+    public void setFillType(int fillType){
+        this.fillType = fillType;
     }
 }

@@ -57,9 +57,6 @@ public class CreateLineListener implements MouseListener {
                 case(UmlEditorCanvas.MODE_COMPOSITION_LINE):
                     umlEditorCanvas.getConnectionLines().addLast(new UmlCompositionLine(tempComponent,lastTouced));
                     break;
-                default:
-                    umlEditorCanvas.getConnectionLines().addLast(new UmlConnectionLine(tempComponent,lastTouced));
-                    break;
             }
             touchOnComponent=false;
         }

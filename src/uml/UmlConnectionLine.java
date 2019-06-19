@@ -14,7 +14,7 @@ public class UmlConnectionLine extends BasicComponent {
     UmlComponent source;
     UmlComponent target;
     int arrowSize = 0;
-
+    Port sourcePort, destinationPort;
     public UmlConnectionLine(UmlComponent source, UmlComponent target) {
         this.source = source;
         this.target = target;
@@ -22,68 +22,69 @@ public class UmlConnectionLine extends BasicComponent {
 
     @Override
     public void draw(Graphics2D graphics2D) {
-        Point p1, p2;
+
         GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
         if(source.isRightTo(target)){
-            p2 = target.getConnectionPort(UmlComponent.RIGHT_PORT).getCenter();
-            drawArrow(graphics2D,p2,LEFT);
-            path.moveTo(p2.getX()+arrowSize,p2.getY());
+            destinationPort = target.getConnectionPort(UmlComponent.RIGHT_PORT);
+            drawArrow(graphics2D,destinationPort.getCenter(),LEFT);
+            path.moveTo(destinationPort.getCenter().getX()+arrowSize,destinationPort.getCenter().getY());
             if(source.isOnTopOf(target)){
-                p1= source.getConnectionPort(UmlComponent.LOWER_PORT).getCenter();
-                path.lineTo(p1.getX(),p2.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort= source.getConnectionPort(UmlComponent.LOWER_PORT);
+                path.lineTo(sourcePort.getCenter().getX(),destinationPort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
             }
             else if(source.isBelow(target)){
-                p1 =source.getConnectionPort(UmlComponent.UPPER_PORT).getCenter();
-                path.lineTo(p1.getX(),p2.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort =source.getConnectionPort(UmlComponent.UPPER_PORT);
+                path.lineTo(sourcePort.getCenter().getX(),destinationPort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
             }
             else {
-                p1 = source.getConnectionPort(UmlComponent.LEFT_PORT).getCenter();
-                path.lineTo((p1.getX()+p2.getX())/2,p2.getY());
-                path.lineTo((p1.getX()+p2.getX())/2,p1.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort = source.getConnectionPort(UmlComponent.LEFT_PORT);
+                path.lineTo((sourcePort.getCenter().getX()+destinationPort.getCenter().getX())/2,destinationPort.getCenter().getY());
+                path.lineTo((sourcePort.getCenter().getX()+destinationPort.getCenter().getX())/2,sourcePort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
             }
         }
         else if(source.isLeftTo(target)){
-            p2 = target.getConnectionPort(UmlComponent.LEFT_PORT).getCenter();
-            drawArrow(graphics2D,p2,RIGHT);
-            path.moveTo(p2.getX()-arrowSize,p2.getY());
+            destinationPort = target.getConnectionPort(UmlComponent.LEFT_PORT);
+            drawArrow(graphics2D,destinationPort.getCenter(),RIGHT);
+            path.moveTo(destinationPort.getCenter().getX()-arrowSize,destinationPort.getCenter().getY());
             if(source.isOnTopOf(target)){
-                p1= source.getConnectionPort(UmlComponent.LOWER_PORT).getCenter();
-                path.lineTo(p1.getX(),p2.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort= source.getConnectionPort(UmlComponent.LOWER_PORT);
+                path.lineTo(sourcePort.getCenter().getX(),destinationPort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
             }
             else if(source.isBelow(target)){
-                p1 =source.getConnectionPort(UmlComponent.UPPER_PORT).getCenter();
-                path.lineTo(p1.getX(),p2.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort = source.getConnectionPort(UmlComponent.UPPER_PORT);
+                path.lineTo(sourcePort.getCenter().getX(),destinationPort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY()
+                );
             }
             else {
-                p1 = source.getConnectionPort(UmlComponent.RIGHT_PORT).getCenter();
-                path.lineTo((p1.getX()+p2.getX())/2,p2.getY());
-                path.lineTo((p1.getX()+p2.getX())/2,p1.getY());
-                path.lineTo(p1.getX(),p1.getY());
+                sourcePort = source.getConnectionPort(UmlComponent.RIGHT_PORT);
+                path.lineTo((sourcePort.getCenter().getX()+destinationPort.getCenter().getX())/2,destinationPort.getCenter().getY());
+                path.lineTo((sourcePort.getCenter().getX()+destinationPort.getCenter().getX())/2,sourcePort.getCenter().getY());
+                path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
             }
         }
         else if(source.isOnTopOf(target)){
-            p1 = source.getConnectionPort(UmlComponent.LOWER_PORT).getCenter();
-            p2 = target.getConnectionPort(UmlComponent.UPPER_PORT).getCenter();
-            drawArrow(graphics2D,p2,DOWN);
+            sourcePort = source.getConnectionPort(UmlComponent.LOWER_PORT);
+            destinationPort = target.getConnectionPort(UmlComponent.UPPER_PORT);
+            drawArrow(graphics2D,destinationPort.getCenter(),DOWN);
 
-            path.moveTo(p2.getX(),p2.getY()-arrowSize);
-            path.lineTo(p2.getX(),(p1.getY()+p2.getY())/2);
-            path.lineTo(p1.getX(),(p1.getY()+p2.getY())/2);
-            path.lineTo(p1.getX(),p1.getY());
+            path.moveTo(destinationPort.getCenter().getX(),destinationPort.getCenter().getY()-arrowSize);
+            path.lineTo(destinationPort.getCenter().getX(),(sourcePort.getCenter().getY()+destinationPort.getCenter().getY())/2);
+            path.lineTo(sourcePort.getCenter().getX(),(sourcePort.getCenter().getY()+destinationPort.getCenter().getY())/2);
+            path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
         }
         else if(source.isBelow(target)){
-            p1= source.getConnectionPort(UmlComponent.UPPER_PORT).getCenter();
-            p2 = target.getConnectionPort(UmlComponent.LOWER_PORT).getCenter();
-            drawArrow(graphics2D,p2,UP);
-            path.moveTo(p2.getX(),p2.getY()+arrowSize);
-            path.lineTo(p2.getX(),(p1.getY()+p2.getY())/2);
-            path.lineTo(p1.getX(),(p1.getY()+p2.getY())/2);
-            path.lineTo(p1.getX(),p1.getY());
+            sourcePort= source.getConnectionPort(UmlComponent.UPPER_PORT);
+            destinationPort = target.getConnectionPort(UmlComponent.LOWER_PORT);
+            drawArrow(graphics2D,destinationPort.getCenter(),UP);
+            path.moveTo(destinationPort.getCenter().getX(),destinationPort.getCenter().getY()+arrowSize);
+            path.lineTo(destinationPort.getCenter().getX(),(sourcePort.getCenter().getY()+destinationPort.getCenter().getY())/2);
+            path.lineTo(sourcePort.getCenter().getX(),(sourcePort.getCenter().getY()+destinationPort.getCenter().getY())/2);
+            path.lineTo(sourcePort.getCenter().getX(),sourcePort.getCenter().getY());
         }
         graphics2D.draw(path);
     }

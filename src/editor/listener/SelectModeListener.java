@@ -2,14 +2,11 @@ package editor.listener;
 
 import editor.UmlEditorCanvas;
 import uml.BasicRect;
-import uml.UmlClass;
 import uml.UmlComponent;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 public class SelectModeListener extends MouseAdapter {
     private Point pressedPoint;

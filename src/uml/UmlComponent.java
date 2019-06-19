@@ -6,7 +6,8 @@ import java.util.List;
 
 public class UmlComponent extends BasicComponent {
     boolean selected;
-    private List<BasicRect> connectionPortList;
+    private List<Port> connectionPortList;
+    private List<Port> resizePort;
     public static final int UPPER_PORT = 0;
     public static final int LOWER_PORT = 1;
     public static final int LEFT_PORT = 2;
@@ -36,15 +37,19 @@ public class UmlComponent extends BasicComponent {
     void setConnectionPort() {
         if (connectionPortList == null) {
             connectionPortList = new ArrayList<>();
+            connectionPortList.add(UPPER_PORT, new Port((minX + width / 2 - 5), minY - 5, 10, 10,this));
+            connectionPortList.add(LOWER_PORT, new Port((minX + width / 2 - 5), ((minY + height) - 5), 10, 10, this));
+            connectionPortList.add(LEFT_PORT, new Port(minX - 5, (minY + height / 2 - 5), 10, 10, this));
+            connectionPortList.add(RIGHT_PORT, new Port((minX + width) - 5, (minY + height / 2 - 5), 10, 10, this));
+        }else{
+            connectionPortList.get(UPPER_PORT).moveTo(new Point((minX + width / 2 - 5), minY - 5));
+            connectionPortList.get(LOWER_PORT).moveTo(new Point((minX + width / 2 - 5), ((minY + height) - 5)));
+            connectionPortList.get(LEFT_PORT).moveTo(new Point(minX - 5, (minY + height / 2 - 5)));
+            connectionPortList.get(RIGHT_PORT).moveTo(new Point((minX + width) - 5, (minY + height / 2 - 5)));
         }
-        connectionPortList.clear();
-        connectionPortList.add(UPPER_PORT, new BasicRect((minX + width / 2 - 5), minY - 5, 10, 10, BasicRect.SOLID));
-        connectionPortList.add(LOWER_PORT, new BasicRect((minX + width / 2 - 5), ((minY + height) - 5), 10, 10, BasicRect.SOLID));
-        connectionPortList.add(LEFT_PORT, new BasicRect(minX - 5, (minY + height / 2 - 5), 10, 10, BasicRect.SOLID));
-        connectionPortList.add(RIGHT_PORT, new BasicRect((minX + width) - 5, (minY + height / 2 - 5), 10, 10, BasicRect.SOLID));
     }
 
-    public BasicRect getConnectionPort(int port) {
+    public Port getConnectionPort(int port) {
         return connectionPortList.get(port);
     }
 
