@@ -1,7 +1,7 @@
 package uml;
 
 import java.awt.*;
-
+import java.util.List;
 public class TextView extends BasicComponent {
     private String text;
     private Font textFont = new Font("text",Font.BOLD,14);
@@ -25,28 +25,35 @@ public class TextView extends BasicComponent {
         this.text = text;
         this.layoutMode = layoutMode;
     }
-    public TextView(BasicRect boundingBox, String text, int layoutMode){
-        this(boundingBox.minX,boundingBox.minY,boundingBox.width,boundingBox.height,text,layoutMode);
+    public TextView(BasicRect parent, String text, int layoutMode){
+        this(parent.minX,parent.minY,parent.width,parent.height,text,layoutMode);
     }
 
     @Override
     public void draw(Graphics2D graphics2D) {
-        Point layout = getLayoutPoint(graphics2D);
         graphics2D.setFont(textFont);
-        for(String line : this.text.split("\n")){
-            System.out.println(line);
+        Point layout = getLayoutPoint(graphics2D);
+        for(String line :this.text.split("\\\\n")){
             graphics2D.drawString(line,layout.x,layout.y);
             layout.y+=graphics2D.getFontMetrics().getHeight();
+        }
+        if(drawBound){
+            graphics2D.drawRect(this.minX,this.minY,this.width,this.height);
         }
     }
 
     Point getLayoutPoint(Graphics2D graphics2D){
-        FontMetrics metric = graphics2D.getFontMetrics(getTextFont());
+        FontMetrics metric = graphics2D.getFontMetrics();
+        String[] list = this.text.split("\\\\n");
+        if(list.length*(metric.getHeight())>height){
+            this.height =list.length*(metric.getHeight());
+        }
+
         int layoutX=minX,layoutY=minY;
         switch (layoutMode){
             case LAYOUT_CENTER:
                 layoutX = minX+(width-metric.stringWidth(text))/2;
-                layoutY = minY +(height - metric.getHeight())/2+metric.getAscent();
+                layoutY = minY +(height - metric.getHeight()*list.length)/2+metric.getAscent();
                 break;
             case LAYOUT_TOP_LEFT:
                 layoutX = minX + metric.getDescent();
@@ -62,7 +69,7 @@ public class TextView extends BasicComponent {
                 break;
             case LAYOUT_CENTER_LEFT:
                 layoutX = minX + metric.getDescent();
-                layoutY = minY +(height - metric.getHeight())/2+metric.getAscent();
+                layoutY = minY +(height - metric.getHeight()*list.length)/2+metric.getAscent();
         }
         return new Point(layoutX,layoutY);
     }

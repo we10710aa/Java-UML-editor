@@ -165,7 +165,6 @@ public class UmlEditorCanvas extends JPanel implements ActionListener {
         } else if (e.getActionCommand().equals("ungroup")) {
             ungrouptoComponent();
         } else if (e.getActionCommand().equals("changeName")) {
-            System.out.println("hello");
             changeComponentName();
         }
     }

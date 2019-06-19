@@ -80,12 +80,10 @@ public class UmlComponent extends BasicComponent {
     }
 
     public void changeComponentName() {
-        System.out.println("hello");
         ChangeNameCanvas changeNameCanvas = new ChangeNameCanvas(this.getComponentName());
         changeNameCanvas.setOnStringResultListener(new OnStringResultListener() {
             @Override
             public void onStringResult(String result) {
-                System.out.println("helllo world");
                 UmlComponent.this.componentName.setText(result);
             }
         });
