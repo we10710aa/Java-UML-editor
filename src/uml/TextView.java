@@ -33,7 +33,7 @@ public class TextView extends BasicComponent {
     public void draw(Graphics2D graphics2D) {
         graphics2D.setFont(textFont);
         Point layout = getLayoutPoint(graphics2D);
-        for(String line :this.text.split("\\\\n")){
+        for(String line :this.text.split("\n")){
             graphics2D.drawString(line,layout.x,layout.y);
             layout.y+=graphics2D.getFontMetrics().getHeight();
         }
@@ -44,7 +44,7 @@ public class TextView extends BasicComponent {
 
     Point getLayoutPoint(Graphics2D graphics2D){
         FontMetrics metric = graphics2D.getFontMetrics();
-        String[] list = this.text.split("\\\\n");
+        String[] list = this.text.split("\n");
         if(list.length*(metric.getHeight())>height){
             this.height =list.length*(metric.getHeight());
         }

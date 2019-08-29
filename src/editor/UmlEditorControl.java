@@ -1,6 +1,5 @@
 package editor;
 
-import editor.listener.OnItemSelectedListener;
 import uml.BasicButton;
 
 import javax.swing.*;

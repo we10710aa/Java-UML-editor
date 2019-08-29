@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class UmlEditorCanvas extends JPanel implements ActionListener {
@@ -104,16 +105,8 @@ public class UmlEditorCanvas extends JPanel implements ActionListener {
     }
 
     private void changeComponentName() {
-        int selectedComponentAmount = 0;
-        UmlComponent selectedComponent = null;
-        for (UmlComponent component : editorObjects) {
-            if (component.isSelected()) {
-                selectedComponent = component;
-                selectedComponentAmount += 1;
-            }
-        }
-        if (selectedComponentAmount == 1) {
-            selectedComponent.changeComponentName();
+        if (getSelectedComponents().size() == 1) {
+            getSelectedComponents().getFirst().changeComponentName();
         }
     }
 
@@ -135,15 +128,10 @@ public class UmlEditorCanvas extends JPanel implements ActionListener {
     }
 
     private void ungrouptoComponent() {
-        int selectedComponentAmount = 0;
-        UmlComponent selectedComponent = null;
-        for (UmlComponent component : editorObjects) {
-            if (component.isSelected()) {
-                selectedComponent = component;
-                selectedComponentAmount += 1;
-            }
-        }
-        if (selectedComponentAmount == 1) {
+        LinkedList<UmlComponent> selectedComponents = getSelectedComponents();
+
+        if (selectedComponents.size() == 1) {
+            UmlComponent selectedComponent = selectedComponents.getFirst();
             LinkedList<UmlComponent> components = selectedComponent.getChildComponent();
             if (components != null) {
                 editorObjects.removeFirstOccurrence(selectedComponent);
@@ -153,6 +141,25 @@ public class UmlEditorCanvas extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+    private void toFront(UmlComponent component){
+        this.editorObjects.removeFirstOccurrence(component);
+        this.editorObjects.addLast(component);
+    }
+
+    private void toBack(UmlComponent component){
+        this.editorObjects.removeFirstOccurrence(component);
+        this.editorObjects.addFirst(component);
+    }
+
+    public LinkedList<UmlComponent> getSelectedComponents(){
+        LinkedList<UmlComponent> components = new LinkedList<>();
+        for (UmlComponent component : editorObjects) {
+            if (component.isSelected()) {
+                components.addLast(component);
+            }
+        }
+        return components;
     }
 
     @Override
@@ -166,6 +173,18 @@ public class UmlEditorCanvas extends JPanel implements ActionListener {
             ungrouptoComponent();
         } else if (e.getActionCommand().equals("changeName")) {
             changeComponentName();
+        }else if(e.getActionCommand().equals("toFront")){
+            if(getSelectedComponents().size()==1){
+                toFront(getSelectedComponents().getFirst());
+            }
+        } else if(e.getActionCommand().equals("toBack")){
+            if(getSelectedComponents().size()==1){
+                toBack(getSelectedComponents().getFirst());
+            }
+        } else{
+            if(getSelectedComponents().size()==1){
+                getSelectedComponents().getFirst().onActionSelected(e);
+            }
         }
     }
 }

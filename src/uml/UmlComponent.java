@@ -1,14 +1,16 @@
 package uml;
 
 import editor.ChangeNameCanvas;
+import editor.listener.OnActionSelectedListener;
 import editor.listener.OnStringResultListener;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 
-public class UmlComponent extends BasicComponent {
+public class UmlComponent extends BasicComponent implements OnActionSelectedListener {
     boolean selected;
     private List<Port> connectionPortList;
     private List<Port> resizePort;
@@ -96,5 +98,10 @@ public class UmlComponent extends BasicComponent {
 
     public LinkedList<UmlComponent> getChildComponent(){
         return null;
+    }
+
+    @Override
+    public void onActionSelected(ActionEvent e) {
+
     }
 }
